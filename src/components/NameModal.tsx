@@ -34,27 +34,8 @@ export function NameModal() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.8 }}
-      className="fixed inset-0 bg-black z-50 flex flex-col"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col"
     >
-      {/* Super subtle B&W background - Everest panorama (fixed, no repeat) */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-          backgroundImage: "url(/bg-optimized.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-          filter: "grayscale(100%)",
-          opacity: 0.12,
-        }}
-      />
-
       {/* Main content - centered with massive whitespace */}
       <div className="relative z-10 flex-1 flex items-center justify-center px-8">
         <div className="max-w-4xl w-full">

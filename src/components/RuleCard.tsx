@@ -24,6 +24,14 @@ export function RuleCard({ rule, rank }: Props) {
   const isOwnRule = rule.author === name;
   const canVote = name && !isOwnRule;
 
+  // Determine glow class based on rank
+  const getGlowClass = () => {
+    if (rank === 1) return "glow-gold breathing";
+    if (rank === 2) return "glow-silver";
+    if (rank === 3) return "glow-bronze";
+    return "";
+  };
+
   const handleVote = () => {
     if (!canVote) return;
 
@@ -47,21 +55,21 @@ export function RuleCard({ rule, rank }: Props) {
         y: { duration: 0.4 },
       }}
       style={{ willChange: "transform" }}
-      className="group py-12 border-b border-[var(--gray-1)]/20 last:border-b-0"
+      className={`group py-12 border-b border-[var(--gray-1)]/20 last:border-b-0 ${rank === 1 ? "breathing" : ""}`}
     >
       {/* Rule number */}
       <div className="flex items-start gap-8 md:gap-16">
         <motion.span
           layout
           transition={smoothSpring}
-          className="text-[var(--gray-1)] text-xs tabular-nums pt-2 w-8 shrink-0"
+          className={`text-xs tabular-nums pt-2 w-8 shrink-0 ${rank <= 3 ? "text-white" : "text-[var(--gray-1)]"}`}
         >
           {String(rank).padStart(2, "0")}
         </motion.span>
 
         <div className="flex-1">
-          {/* Rule text - large, readable */}
-          <p className="text-white text-xl md:text-2xl leading-relaxed mb-8">
+          {/* Rule text - variable size based on rank */}
+          <p className={`text-white leading-relaxed mb-8 ${rank === 1 ? "text-2xl md:text-3xl" : rank <= 3 ? "text-xl md:text-2xl" : "text-xl md:text-2xl"}`}>
             {rule.text}
           </p>
 

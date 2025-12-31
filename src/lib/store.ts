@@ -11,6 +11,7 @@ interface Store {
   fetchRules: () => Promise<void>;
   addRule: (text: string) => Promise<void>;
   toggleVote: (ruleId: string) => Promise<void>;
+  clearVotes: () => Promise<void>;
 }
 
 export const useStore = create<Store>()(
@@ -114,6 +115,41 @@ export const useStore = create<Store>()(
         setTimeout(() => {
           fetchRules();
         }, 2000);
+      },
+
+      clearVotes: async () => {
+        if (!isConfigured || !supabase) return;
+        const { name, rules, fetchRules } = get();
+        if (!name) return;
+
+        // Get all rules the user has voted on
+        const votedRules = rules.filter((r) => r.has_voted);
+        if (votedRules.length === 0) return;
+
+        // Optimistically clear all votes in UI
+        set({
+          rules: rules.map((r) =>
+            r.has_voted
+              ? { ...r, has_voted: false, upvotes: r.upvotes - 1 }
+              : r
+          ),
+        });
+
+        // Delete all votes from database
+        for (const rule of votedRules) {
+          await supabase
+            .from("votes")
+            .delete()
+            .eq("rule_id", rule.id)
+            .eq("voter", name);
+          await supabase
+            .from("rules")
+            .update({ upvotes: rule.upvotes - 1 })
+            .eq("id", rule.id);
+        }
+
+        // Refresh
+        await fetchRules();
       },
     }),
     {

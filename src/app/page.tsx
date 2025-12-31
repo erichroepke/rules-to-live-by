@@ -1,9 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { NameModal } from "@/components/NameModal";
 import { AddRuleForm } from "@/components/AddRuleForm";
 import { RuleFeed } from "@/components/RuleFeed";
+import { ExportModal } from "@/components/ExportModal";
+import { useStore } from "@/lib/store";
 
 const galleryTransition = {
   duration: 1.2,
@@ -11,28 +14,12 @@ const galleryTransition = {
 };
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-black relative">
-      {/* Super subtle B&W background - Everest panorama (fixed, no repeat) */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-          backgroundImage: "url(/bg-optimized.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-          filter: "grayscale(100%)",
-          opacity: 0.12,
-        }}
-      />
+  const [showExport, setShowExport] = useState(false);
+  const { rules } = useStore();
+  const favoriteCount = rules.filter((r) => r.has_voted).length;
 
+  return (
+    <div className="min-h-screen relative">
       <NameModal />
 
       <main className="relative z-10 max-w-5xl mx-auto px-8 md:px-16">
@@ -86,10 +73,41 @@ export default function Home() {
             Rules to Live By
           </span>
           <span className="text-xs text-[var(--gray-1)]">
-            2024
+            2025
           </span>
         </div>
       </footer>
+
+      {/* Sticky Export Footer - appears when user has favorites */}
+      <AnimatePresence>
+        {favoriteCount > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={galleryTransition}
+            className="fixed bottom-0 left-0 right-0 z-40 bg-black/90 backdrop-blur-sm border-t border-white/10"
+          >
+            <div className="max-w-5xl mx-auto px-8 md:px-16 py-4 flex items-center justify-between">
+              <span className="text-sm text-[var(--gray-1)]">
+                <span className="text-white">{favoriteCount}</span>/10 selected
+              </span>
+              <button
+                onClick={() => setShowExport(true)}
+                className="flex items-center gap-3 px-6 py-3 bg-white text-black text-xs uppercase tracking-[0.15em] hover:bg-white/90 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                Export
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Export Modal */}
+      <ExportModal isOpen={showExport} onClose={() => setShowExport(false)} />
     </div>
   );
 }

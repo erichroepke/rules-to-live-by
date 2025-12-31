@@ -31,16 +31,32 @@ html {
 }
 
 body {
-  background: var(--black);
+  background-color: var(--black);
   color: var(--white);
   font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  /* Force GPU acceleration */
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  position: relative;
+}
+
+/* Everest background - fixed, grayscale, subtle */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-image: url('/bg-optimized.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: grayscale(100%);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 ::selection {
@@ -111,4 +127,69 @@ body {
   html {
     scroll-timeline: --page-scroll;
   }
+}
+
+/* ========================================
+   2025 DESIGN SYSTEM - B&W MINIMAL
+   ======================================== */
+
+/* Noise texture overlay - very subtle tactile feel */
+.noise-overlay::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Minimal card - no glass, just subtle border */
+.glass-card {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  background: transparent;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Subtle white glow for top rules */
+.glow-gold {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.06);
+}
+
+.glow-silver {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.04);
+}
+
+.glow-bronze {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
+}
+
+/* Rank badge - monochrome */
+.rank-badge {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-1);
+}
+
+.rank-badge-top {
+  color: var(--white);
+}
+
+/* Subtle breathing animation for top rule only */
+@keyframes subtle-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
+}
+
+.breathing {
+  animation: subtle-breathe 5s ease-in-out infinite;
 }
