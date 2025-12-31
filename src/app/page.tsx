@@ -26,9 +26,9 @@ export default function Home() {
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...galleryTransition, delay: 0.1 }}
-          className="pt-16 pb-12 md:pt-48 md:pb-32"
+          className="pt-32 pb-12 md:pt-48 md:pb-32"
         >
-          <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] font-semibold text-white leading-[0.9] tracking-display">
+          <h1 className="text-[10vw] sm:text-[10vw] md:text-[8vw] font-semibold text-white leading-[1] tracking-display">
             Wisdom
           </h1>
           <p className="mt-8 text-[var(--gray-1)] text-lg md:text-xl max-w-lg">
