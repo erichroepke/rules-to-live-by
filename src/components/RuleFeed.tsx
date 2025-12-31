@@ -1,13 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/lib/store";
 import { RuleCard } from "./RuleCard";
 import { supabase, isConfigured } from "@/lib/supabase";
 
+// Simple admin secret - append ?admin=rulesdaddy to URL
+const ADMIN_SECRET = "rulesdaddy";
+
 export function RuleFeed() {
   const { rules, loading, fetchRules } = useStore();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check for admin mode on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setIsAdmin(params.get("admin") === ADMIN_SECRET);
+    }
+  }, []);
 
   useEffect(() => {
     fetchRules();
@@ -79,7 +91,7 @@ export function RuleFeed() {
     <div>
       <AnimatePresence>
         {rules.map((rule, index) => (
-          <RuleCard key={rule.id} rule={rule} rank={index + 1} />
+          <RuleCard key={rule.id} rule={rule} rank={index + 1} isAdmin={isAdmin} />
         ))}
       </AnimatePresence>
     </div>

@@ -8,6 +8,7 @@ import { useStore } from "@/lib/store";
 interface Props {
   rule: Rule;
   rank: number;
+  isAdmin?: boolean;
 }
 
 // Buttery smooth spring config
@@ -18,11 +19,13 @@ const smoothSpring = {
   mass: 1,
 };
 
-export function RuleCard({ rule, rank }: Props) {
-  const { userId, toggleVote } = useStore();
+export function RuleCard({ rule, rank, isAdmin = false }: Props) {
+  const { userId, toggleVote, deleteRule } = useStore();
   const [justVoted, setJustVoted] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const isOwnRule = rule.author === userId;
   const canVote = !isOwnRule;
+  const canDelete = isOwnRule || isAdmin;
 
   // Determine glow class based on rank
   const getGlowClass = () => {
@@ -41,6 +44,11 @@ export function RuleCard({ rule, rank }: Props) {
 
     // Reset animation state after it completes
     setTimeout(() => setJustVoted(false), 800);
+  };
+
+  const handleDelete = () => {
+    deleteRule(rule.id, isAdmin);
+    setShowDeleteConfirm(false);
   };
 
   return (
@@ -74,7 +82,48 @@ export function RuleCard({ rule, rank }: Props) {
           </p>
 
           {/* Meta row - author hidden for anonymous voting */}
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-4">
+            {/* Delete button - shows for own rules or admin */}
+            {canDelete && (
+              <AnimatePresence>
+                {!showDeleteConfirm ? (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setShowDeleteConfirm(true)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--gray-1)] hover:text-red-400 p-2"
+                    title="Delete rule"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </motion.button>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="text-xs text-red-400">Delete?</span>
+                    <button
+                      onClick={handleDelete}
+                      className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="px-3 py-1 text-xs border border-[var(--gray-1)]/40 text-[var(--gray-1)] rounded hover:border-white hover:text-white transition-colors"
+                    >
+                      No
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            )}
+
             <motion.button
               onClick={handleVote}
               disabled={!canVote}

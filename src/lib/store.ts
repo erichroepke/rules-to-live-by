@@ -15,6 +15,7 @@ interface Store {
   fetchRules: () => Promise<void>;
   addRule: (text: string) => Promise<void>;
   toggleVote: (ruleId: string) => Promise<void>;
+  deleteRule: (ruleId: string, isAdmin?: boolean) => Promise<void>;
   clearVotes: () => Promise<void>;
 }
 
@@ -113,6 +114,31 @@ export const useStore = create<Store>()(
         setTimeout(() => {
           fetchRules();
         }, 2000);
+      },
+
+      deleteRule: async (ruleId, isAdmin = false) => {
+        if (!isConfigured || !supabase) return;
+        const { userId, rules, fetchRules } = get();
+
+        const rule = rules.find((r) => r.id === ruleId);
+        if (!rule) return;
+
+        // Only allow deletion if user is the author OR is admin
+        if (rule.author !== userId && !isAdmin) return;
+
+        // Optimistically remove from UI
+        set({
+          rules: rules.filter((r) => r.id !== ruleId),
+        });
+
+        // Delete associated votes first (due to foreign key constraint)
+        await supabase.from("votes").delete().eq("rule_id", ruleId);
+
+        // Delete the rule
+        await supabase.from("rules").delete().eq("id", ruleId);
+
+        // Refresh to ensure consistency
+        await fetchRules();
       },
 
       clearVotes: async () => {
