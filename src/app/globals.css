@@ -59,11 +59,11 @@ body::before {
   pointer-events: none;
 }
 
-/* On mobile, constrain background height to prevent extreme zoom */
+/* On mobile, cover the screen but center the mountain peak */
 @media (max-width: 768px) {
   body::before {
-    background-size: 100% auto;
-    background-position: center top;
+    background-size: cover;
+    background-position: top center;
   }
 }
 
