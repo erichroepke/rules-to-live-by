@@ -6,9 +6,7 @@ import { useStore } from "@/lib/store";
 
 export function AddRuleForm() {
   const [text, setText] = useState("");
-  const { name, addRule } = useStore();
-
-  if (!name) return null;
+  const { addRule } = useStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

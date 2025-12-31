@@ -7,7 +7,7 @@ import { RuleCard } from "./RuleCard";
 import { supabase, isConfigured } from "@/lib/supabase";
 
 export function RuleFeed() {
-  const { rules, loading, fetchRules, name } = useStore();
+  const { rules, loading, fetchRules } = useStore();
 
   useEffect(() => {
     fetchRules();
@@ -31,7 +31,7 @@ export function RuleFeed() {
     return () => {
       supabase?.removeChannel(channel);
     };
-  }, [fetchRules, name]);
+  }, [fetchRules]);
 
   if (!isConfigured) {
     return (

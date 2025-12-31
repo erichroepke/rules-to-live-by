@@ -320,7 +320,7 @@ export function ExportModal({ isOpen, onClose }: Props) {
                 </div>
 
                 {/* Native Share (if available) */}
-                {typeof navigator !== "undefined" && navigator.share && (
+                {typeof navigator !== "undefined" && "share" in navigator && (
                   <>
                     <div className="border-t border-white/10" />
                     <div className="space-y-4">

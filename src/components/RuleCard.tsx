@@ -19,10 +19,10 @@ const smoothSpring = {
 };
 
 export function RuleCard({ rule, rank }: Props) {
-  const { name, toggleVote } = useStore();
+  const { userId, toggleVote } = useStore();
   const [justVoted, setJustVoted] = useState(false);
-  const isOwnRule = rule.author === name;
-  const canVote = name && !isOwnRule;
+  const isOwnRule = rule.author === userId;
+  const canVote = !isOwnRule;
 
   // Determine glow class based on rank
   const getGlowClass = () => {

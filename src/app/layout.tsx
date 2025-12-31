@@ -8,9 +8,18 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+import type { Viewport } from "next";
+
 export const metadata: Metadata = {
   title: "Rules to Live By",
   description: "Share your life rules. Upvote the wisdom.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

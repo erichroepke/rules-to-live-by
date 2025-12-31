@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { NameModal } from "@/components/NameModal";
 import { AddRuleForm } from "@/components/AddRuleForm";
 import { RuleFeed } from "@/components/RuleFeed";
 import { ExportModal } from "@/components/ExportModal";
@@ -20,7 +19,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative">
-      <NameModal />
 
       <main className="relative z-10 max-w-5xl mx-auto px-8 md:px-16">
         {/* Hero section - huge type, massive whitespace */}
@@ -28,7 +26,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...galleryTransition, delay: 0.1 }}
-          className="pt-32 pb-24 md:pt-48 md:pb-32"
+          className="pt-16 pb-12 md:pt-48 md:pb-32"
         >
           <h1 className="text-[14vw] sm:text-[10vw] md:text-[8vw] font-semibold text-white leading-[0.85] tracking-display">
             Wisdom
@@ -43,7 +41,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ ...galleryTransition, delay: 0.3 }}
-          className="pb-24 md:pb-32 border-t border-[var(--gray-1)]/20 pt-16"
+          className="pb-12 md:pb-32 border-t border-[var(--gray-1)]/20 pt-8 md:pt-16"
         >
           <AddRuleForm />
         </motion.section>
@@ -54,7 +52,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ ...galleryTransition, delay: 0.5 }}
         >
-          <div className="flex items-baseline justify-between mb-16 border-t border-[var(--gray-1)]/20 pt-16">
+          <div className="flex items-baseline justify-between mb-8 md:mb-16 border-t border-[var(--gray-1)]/20 pt-8 md:pt-16">
             <h2 className="text-xs uppercase tracking-[0.2em] text-[var(--gray-1)]">
               All Rules
             </h2>
