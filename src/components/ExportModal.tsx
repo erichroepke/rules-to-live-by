@@ -142,13 +142,14 @@ export function ExportModal({ isOpen, onClose }: Props) {
         y += ruleData[i].height + ruleSpacing;
       }
 
-      // Minimal footer branding
+      // Minimal footer branding with link
       ctx.font = "300 20px -apple-system, BlinkMacSystemFont, sans-serif";
       ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
       ctx.textAlign = "center";
-      ctx.fillText("RULES TO LIVE BY", width / 2, height - 120);
-      ctx.font = "300 16px -apple-system, BlinkMacSystemFont, sans-serif";
-      ctx.fillText("2025", width / 2, height - 90);
+      ctx.fillText("RULES TO LIVE BY", width / 2, height - 140);
+      ctx.font = "300 14px -apple-system, BlinkMacSystemFont, sans-serif";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
+      ctx.fillText("Add yours at rules-to-live-by.netlify.app", width / 2, height - 110);
 
       // Convert to blob and create URL
       canvas.toBlob((blob) => {
@@ -169,7 +170,7 @@ export function ExportModal({ isOpen, onClose }: Props) {
       .map((r, i) => `${i + 1}. ${r.text}`)
       .join("\n\n");
 
-    const fullText = `RULES TO LIVE BY - 2025\n\n${text}\n\n---\nrulestolive.by`;
+    const fullText = `RULES TO LIVE BY - 2025\n\n${text}\n\n---\nAdd yours: https://rules-to-live-by.netlify.app`;
 
     navigator.clipboard.writeText(fullText);
     setCopied(true);
@@ -182,13 +183,14 @@ export function ExportModal({ isOpen, onClose }: Props) {
       .map((r, i) => `${i + 1}. ${r.text}`)
       .join("\n\n");
 
-    const fullText = `RULES TO LIVE BY - 2025\n\n${text}`;
+    const fullText = `RULES TO LIVE BY - 2025\n\n${text}\n\n---\nAdd yours: https://rules-to-live-by.netlify.app`;
 
     if (navigator.share) {
       try {
         await navigator.share({
           title: "Rules to Live By",
           text: fullText,
+          url: "https://rules-to-live-by.netlify.app",
         });
       } catch {
         // User cancelled or error
