@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <div className="min-h-screen relative">
 
-      <main className="relative z-10 max-w-5xl mx-auto px-8 md:px-16">
+      <main className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-16">
         {/* Hero section - huge type, massive whitespace */}
         <motion.section
           initial={{ opacity: 0, y: 60 }}
@@ -28,7 +28,7 @@ export default function Home() {
           transition={{ ...galleryTransition, delay: 0.1 }}
           className="pt-16 pb-12 md:pt-48 md:pb-32"
         >
-          <h1 className="text-[14vw] sm:text-[10vw] md:text-[8vw] font-semibold text-white leading-[0.85] tracking-display">
+          <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] font-semibold text-white leading-[0.9] tracking-display">
             Wisdom
           </h1>
           <p className="mt-8 text-[var(--gray-1)] text-lg md:text-xl max-w-lg">

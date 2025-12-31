@@ -196,14 +196,35 @@ export function ExportModal({ isOpen, onClose }: Props) {
     }
   };
 
-  // Download wallpaper
-  const downloadWallpaper = () => {
+  // Share wallpaper using native share sheet
+  const shareWallpaper = async () => {
     if (!wallpaperUrl) return;
 
-    const link = document.createElement("a");
-    link.href = wallpaperUrl;
-    link.download = "rules-to-live-by-2025.png";
-    link.click();
+    try {
+      // Fetch the blob from the object URL
+      const response = await fetch(wallpaperUrl);
+      const blob = await response.blob();
+      const file = new File([blob], "rules-to-live-by-2025.png", { type: "image/png" });
+
+      if (navigator.share && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "Rules to Live By - 2025",
+        });
+      } else {
+        // Fallback to download
+        const link = document.createElement("a");
+        link.href = wallpaperUrl;
+        link.download = "rules-to-live-by-2025.png";
+        link.click();
+      }
+    } catch {
+      // User cancelled or error - fallback to download
+      const link = document.createElement("a");
+      link.href = wallpaperUrl;
+      link.download = "rules-to-live-by-2025.png";
+      link.click();
+    }
   };
 
   // Cleanup URL on unmount
@@ -287,10 +308,13 @@ export function ExportModal({ isOpen, onClose }: Props) {
                       </div>
 
                       <button
-                        onClick={downloadWallpaper}
-                        className="w-full py-4 bg-white text-black text-sm uppercase tracking-[0.15em] hover:bg-white/90 transition-colors"
+                        onClick={shareWallpaper}
+                        className="w-full py-4 bg-white text-black text-sm uppercase tracking-[0.15em] hover:bg-white/90 transition-colors flex items-center justify-center gap-2"
                       >
-                        Download Wallpaper
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                        Save Wallpaper
                       </button>
 
                       <button
@@ -329,12 +353,12 @@ export function ExportModal({ isOpen, onClose }: Props) {
                       </h3>
                       <button
                         onClick={nativeShare}
-                        className="w-full py-4 border border-white/20 hover:border-white text-white text-sm uppercase tracking-[0.15em] transition-colors flex items-center justify-center gap-3"
+                        className="w-full py-4 border border-white/20 hover:border-white text-white text-sm uppercase tracking-[0.15em] transition-colors flex items-center justify-center gap-2"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                         </svg>
-                        Share via Messages, Email, etc.
+                        Share
                       </button>
                     </div>
                   </>
