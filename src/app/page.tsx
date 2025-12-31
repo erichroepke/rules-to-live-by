@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AddRuleForm } from "@/components/AddRuleForm";
 import { RuleFeed } from "@/components/RuleFeed";
@@ -12,13 +12,65 @@ const galleryTransition = {
   ease: [0.19, 1, 0.22, 1] as const,
 };
 
+// Detect Instagram/Facebook in-app browser
+const isInAppBrowser = () => {
+  if (typeof window === "undefined") return false;
+  const ua = navigator.userAgent || navigator.vendor;
+  return /Instagram|FBAN|FBAV/i.test(ua);
+};
+
 export default function Home() {
   const [showExport, setShowExport] = useState(false);
+  const [showInAppWarning, setShowInAppWarning] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const { rules } = useStore();
   const favoriteCount = rules.filter((r) => r.has_voted).length;
 
+  useEffect(() => {
+    setShowInAppWarning(isInAppBrowser());
+  }, []);
+
+  const copyLink = () => {
+    navigator.clipboard.writeText("https://rules-to-live-by.netlify.app");
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
+  };
+
   return (
     <div className="min-h-screen relative">
+      {/* Instagram/Facebook in-app browser warning */}
+      <AnimatePresence>
+        {showInAppWarning && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-0 left-0 right-0 z-50 bg-amber-500 text-black px-4 py-3"
+          >
+            <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+              <p className="text-sm text-center sm:text-left">
+                For the best experience, open in Safari or Chrome
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={copyLink}
+                  className="px-4 py-1.5 bg-black text-white text-xs uppercase tracking-wider rounded hover:bg-black/80 transition-colors"
+                >
+                  {linkCopied ? "Copied!" : "Copy Link"}
+                </button>
+                <button
+                  onClick={() => setShowInAppWarning(false)}
+                  className="p-1.5 hover:bg-black/10 rounded transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="relative z-10 max-w-5xl mx-auto px-6 sm:px-8 md:px-16">
         {/* Hero section - huge type, massive whitespace */}
